@@ -206,7 +206,7 @@
 // When first starting the main fan, run it at full speed for the
 // given number of milliseconds.  This gets the fan spinning reliably
 // before setting a PWM value. (Does not work with software PWM for fan on Sanguinololu)
-//#define FAN_KICKSTART_TIME 100
+#define FAN_KICKSTART_TIME 100
 
 /**
  * PWM Fan Scaling
@@ -237,7 +237,7 @@
  * Multiple extruders can be assigned to the same pin in which case
  * the fan will turn on when any selected extruder is above the threshold.
  */
-#define E0_AUTO_FAN_PIN -1
+#define E0_AUTO_FAN_PIN 7
 #define E1_AUTO_FAN_PIN -1
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
@@ -383,7 +383,7 @@
 #define Y_HOME_BUMP_MM 5
 #define Z_HOME_BUMP_MM 2
 #define HOMING_BUMP_DIVISOR { 2, 2, 4 }  // Re-Bump Speed Divisor (Divides the Homing Feedrate)
-//#define QUICK_HOME                     // If homing includes X and Y, do a diagonal move initially
+#define QUICK_HOME                     // If homing includes X and Y, do a diagonal move initially
 
 // When G28 is called, this option will make Y home before X
 //#define HOME_Y_BEFORE_X
@@ -421,7 +421,7 @@
 // @section lcd
 
 #if ENABLED(ULTIPANEL)
-  #define MANUAL_FEEDRATE {50*60, 50*60, 4*60, 60} // Feedrates for manual moves along X, Y, Z, E from panel
+  #define MANUAL_FEEDRATE {60*60, 60*60, 6*60, 60} // Feedrates for manual moves along X, Y, Z, E from panel
   #define ULTIPANEL_FEEDMULTIPLY  // Comment to disable setting feedrate multiplier via encoder
 #endif
 
@@ -638,7 +638,7 @@
   //#define LONG_FILENAME_HOST_SUPPORT
 
   // Enable this option to scroll long filenames in the SD card menu
-  //#define SCROLL_LONG_FILENAMES
+  #define SCROLL_LONG_FILENAMES
 
   /**
    * This option allows you to abort SD printing when any endstop is triggered.
@@ -741,9 +741,9 @@
  *
  * Warning: Does not respect endstops!
  */
-//#define BABYSTEPPING
+#define BABYSTEPPING
 #if ENABLED(BABYSTEPPING)
-  //#define BABYSTEP_XY              // Also enable X/Y Babystepping. Not supported on DELTA!
+  #define BABYSTEP_XY              // Also enable X/Y Babystepping. Not supported on DELTA!
   #define BABYSTEP_INVERT_Z false    // Change if Z babysteps should go the other way
   #define BABYSTEP_MULTIPLICATOR 1   // Babysteps are very small. Increase for faster motion.
   //#define BABYSTEP_ZPROBE_OFFSET   // Enable to combine M851 and Babystepping
@@ -1159,7 +1159,7 @@
    * M912 - Clear stepper driver overtemperature pre-warn condition flag.
    * M122 S0/1 - Report driver parameters (Requires TMC_DEBUG)
    */
-  //#define MONITOR_DRIVER_STATUS
+  #define MONITOR_DRIVER_STATUS
 
   #if ENABLED(MONITOR_DRIVER_STATUS)
     #define CURRENT_STEP_DOWN     50  // [mA]
@@ -1211,7 +1211,7 @@
    * Enable M122 debugging command for TMC stepper drivers.
    * M122 S0/1 will enable continous reporting.
    */
-  //#define TMC_DEBUG
+  #define TMC_DEBUG
 
   /**
    * M915 Z Axis Calibration
@@ -1481,26 +1481,25 @@
 /**
  * User-defined menu items that execute custom GCode
  */
-//#define CUSTOM_USER_MENUS
+#define CUSTOM_USER_MENUS
 #if ENABLED(CUSTOM_USER_MENUS)
-  #define USER_SCRIPT_DONE "M117 User Script Done"
+  #define USER_SCRIPT_DONE "BED LEVEL Done"
   #define USER_SCRIPT_AUDIBLE_FEEDBACK
-  //#define USER_SCRIPT_RETURN  // Return to status screen after a script
 
-  #define USER_DESC_1 "Home & UBL Info"
-  #define USER_GCODE_1 "G28\nG29 W"
+  #define USER_DESC_1 "Home"
+  #define USER_GCODE_1 "G28"
 
-  #define USER_DESC_2 "Preheat for PLA"
-  #define USER_GCODE_2 "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
+  #define USER_DESC_2 "Front Left"
+  #define USER_GCODE_2 "G1 Z10 F5000\nG1 X20 Y20\nG1 Z0"
 
-  #define USER_DESC_3 "Preheat for ABS"
-  #define USER_GCODE_3 "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_2_TEMP_HOTEND)
+  #define USER_DESC_3 "Front Right"
+  #define USER_GCODE_3 "G1 Z10 F5000\nG1 X280 Y20\nG1 Z0"
 
-  #define USER_DESC_4 "Heat Bed/Home/Level"
-  #define USER_GCODE_4 "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nG28\nG29"
+  #define USER_DESC_4 "Rear Right"
+  #define USER_GCODE_4 "G1 Z10 F5000\nG1 X280 Y280\nG1 Z0"
 
-  #define USER_DESC_5 "Home & Info"
-  #define USER_GCODE_5 "G28\nM503"
+  #define USER_DESC_5 "Rear Left"
+  #define USER_GCODE_5 "G1 Z10 F5000\nG1 X20 Y280\nG1 Z0"
 #endif
 
 /**
