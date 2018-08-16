@@ -5671,7 +5671,7 @@ void home_all_axes() { gcode_G28(true); }
     #endif
   }
 
-  #if HAS_BED_PROBE
+  #if HAS_BED_PROBE && ENABLED(ULTIPANEL)
     static float probe_z_shift(const float center) {
       STOW_PROBE();
       endstops.enable_z_probe(false);
@@ -6055,7 +6055,7 @@ void home_all_axes() { gcode_G28(true); }
 
         switch (probe_points) {
           case -1:
-            #if HAS_BED_PROBE
+            #if HAS_BED_PROBE && ENABLED(ULTIPANEL)
               zprobe_zoffset += probe_z_shift(z_at_pt[CEN]);
             #endif
 
@@ -7309,6 +7309,7 @@ inline void protected_pin_err() {
  *
  *  P<pin>  Pin number (LED if omitted)
  *  S<byte> Pin status from 0 - 255
+ *  I       Flag to ignore Marlin's pin protection
  */
 inline void gcode_M42() {
   if (!parser.seenval('S')) return;
@@ -7317,7 +7318,7 @@ inline void gcode_M42() {
   const pin_t pin_number = parser.byteval('P', LED_PIN);
   if (pin_number < 0) return;
 
-  if (pin_is_protected(pin_number)) return protected_pin_err();
+  if (!parser.boolval('I') && pin_is_protected(pin_number)) return protected_pin_err();
 
   pinMode(pin_number, OUTPUT);
   digitalWrite(pin_number, pin_status);
@@ -10899,7 +10900,7 @@ inline void gcode_M502() {
 #if ENABLED(MAX7219_GCODE)
   /**
    * M7219: Control the Max7219 LED matrix
-   * 
+   *
    *  I         - Initialize (clear) the matrix
    *  F         - Fill the matrix (set all bits)
    *  P         - Dump the LEDs[] array values
@@ -10908,12 +10909,14 @@ inline void gcode_M502() {
    *  X<pos>    - X position of an LED to set or toggle
    *  Y<pos>    - Y position of an LED to set or toggle
    *  V<value>  - The potentially 32-bit value or on/off state to set
-   *              (for example: a chain of 4 Max7219 devices can have 32 bit 
+   *              (for example: a chain of 4 Max7219 devices can have 32 bit
    *               rows or columns depending upon rotation)
    */
   inline void gcode_M7219() {
-    if (parser.seen('I'))
+    if (parser.seen('I')) {
       Max7219_Clear();
+      Max7219_register_setup();
+    }
 
     if (parser.seen('F'))
       for (uint8_t x = 0; x < MAX7219_X_LEDS; x++)
